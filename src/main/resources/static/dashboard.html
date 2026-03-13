@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wheel Share – Owner Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh
+        }
+
+        nav {
+            background: rgba(15, 23, 42, 0.95);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0 32px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100
+        }
+
+        .brand {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #f8fafc
+        }
+
+        .brand span {
+            color: #22d3ee
+        }
+
+        .nav-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 0.9rem;
+            font-weight: 500
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #22d3ee
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px
+        }
+
+        .welcome {
+            margin-bottom: 32px
+        }
+
+        .welcome h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #f8fafc
+        }
+
+        .welcome p {
+            color: #64748b;
+            margin-top: 4px
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 36px
+        }
+
+        .stat-card {
+            background: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 20px
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.06em
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #22d3ee;
+            margin-top: 4px
+        }
+
+        h2 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-bottom: 16px
+        }
+
+        .table-wrap {
+            background: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 36px
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse
+        }
+
+        th {
+            padding: 14px 16px;
+            text-align: left;
+            font-size: 0.78rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06)
+        }
+
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            font-size: 0.9rem;
+            color: #cbd5e1
+        }
+
+        tr:last-child td {
+            border-bottom: none
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02)
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase
+        }
+
+        .badge-PENDING {
+            background: rgba(234, 179, 8, 0.15);
+            color: #eab308;
+            border: 1px solid rgba(234, 179, 8, 0.3)
+        }
+
+        .badge-APPROVED {
+            background: rgba(34, 197, 94, 0.15);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.3)
+        }
+
+        .badge-REJECTED {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3)
+        }
+
+        .btn-approve {
+            background: rgba(34, 197, 94, 0.15);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.78rem;
+            font-weight: 700;
+            transition: all 0.2s
+        }
+
+        .btn-approve:hover {
+            background: rgba(34, 197, 94, 0.3)
+        }
+
+        .btn-reject {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.78rem;
+            font-weight: 700;
+            transition: all 0.2s;
+            margin-left: 6px
+        }
+
+        .btn-reject:hover {
+            background: rgba(239, 68, 68, 0.25)
+        }
+
+        .btn-refresh {
+            background: #22d3ee;
+            color: #0f172a;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.85rem;
+            margin-bottom: 16px
+        }
+
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: #64748b
+        }
+
+        @media(max-width:640px) {
+            .stats-row {
+                grid-template-columns: 1fr 1fr
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="brand">🚜 <span>Wheel</span>Share</div>
+        <div class="nav-links">
+            <a href="/equipments.html">Browse</a>
+            <a href="/add-equipment.html">+ Add Equipment</a>
+            <a href="/dashboard.html" class="active">Dashboard</a>
+            <a href="#" id="logoutBtn">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="welcome">
+            <h1>Owner Dashboard</h1>
+            <p id="welcomeMsg">Manage your equipment and rental requests</p>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-label">Total Requests</div>
+                <div class="stat-value" id="totalCount">–</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Pending</div>
+                <div class="stat-value" id="pendingCount" style="color:#eab308">–</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Approved</div>
+                <div class="stat-value" id="approvedCount" style="color:#22c55e">–</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Rejected</div>
+                <div class="stat-value" id="rejectedCount" style="color:#ef4444">–</div>
+            </div>
+        </div>
+
+        <h2>📋 Rental Requests</h2>
+        <button class="btn-refresh" onclick="loadRentals()">🔄 Refresh</button>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Equipment</th>
+                        <th>Requested By</th>
+                        <th>Email</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="rentalTableBody">
+                    <tr>
+                        <td colspan="7" class="empty">Loading...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem('wsUser') || 'null');
+        if (!user) { alert('Please login first'); window.location.href = '/login.html'; }
+        else document.getElementById('welcomeMsg').textContent = `Welcome back, ${user.name} 👋`;
+
+        document.getElementById('logoutBtn').onclick = () => {
+            localStorage.removeItem('wsUser');
+            window.location.href = '/login.html';
+        };
+
+        async function loadRentals() {
+            const res = await fetch('/api/rentals');
+            const rentals = await res.json();
+            const tbody = document.getElementById('rentalTableBody');
+
+            document.getElementById('totalCount').textContent = rentals.length;
+            document.getElementById('pendingCount').textContent = rentals.filter(r => r.status === 'PENDING').length;
+            document.getElementById('approvedCount').textContent = rentals.filter(r => r.status === 'APPROVED').length;
+            document.getElementById('rejectedCount').textContent = rentals.filter(r => r.status === 'REJECTED').length;
+
+            if (!rentals.length) {
+                tbody.innerHTML = '<tr><td colspan="7" class="empty">No rental requests yet.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = rentals.map(r => {
+                const date = new Date(r.requestDate).toLocaleDateString('en-IN');
+                const actions = r.status === 'PENDING'
+                    ? `<button class="btn-approve" onclick="updateStatus(${r.id},'APPROVED')">✓ Approve</button>
+             <button class="btn-reject" onclick="updateStatus(${r.id},'REJECTED')">✗ Reject</button>`
+                    : '—';
+                return `<tr>
+          <td>${r.id}</td>
+          <td><strong>${r.equipmentName}</strong></td>
+          <td>${r.userName}</td>
+          <td>${r.userEmail}</td>
+          <td>${date}</td>
+          <td><span class="badge badge-${r.status}">${r.status}</span></td>
+          <td>${actions}</td>
+        </tr>`;
+            }).join('');
+        }
+
+        async function updateStatus(id, status) {
+            await fetch(`/api/rentals/${id}/status`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status })
+            });
+            loadRentals();
+        }
+
+        loadRentals();
+    </script>
+</body>
+
+</html>

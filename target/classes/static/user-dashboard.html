@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wheel Share – My Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+
+        /* ── Navbar ── */
+        nav {
+            background: rgba(15, 23, 42, 0.97);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0 32px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #f8fafc;
+        }
+
+        .brand span {
+            color: #22d3ee;
+        }
+
+        .nav-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            margin-left: 4px;
+        }
+
+        .nav-links a:hover {
+            color: #22d3ee;
+            background: rgba(34, 211, 238, 0.08);
+        }
+
+        .nav-links a.active {
+            color: #22d3ee;
+        }
+
+        .nav-links a.logout {
+            color: #ef4444;
+        }
+
+        /* ── Layout ── */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 36px 20px 80px;
+        }
+
+        /* ── Welcome Banner ── */
+        .welcome-banner {
+            background: linear-gradient(135deg, #1e1b4b, #1e293b);
+            border: 1px solid rgba(34, 211, 238, 0.2);
+            border-radius: 16px;
+            padding: 28px 32px;
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .welcome-banner h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #f8fafc;
+        }
+
+        .welcome-banner p {
+            color: #64748b;
+            margin-top: 4px;
+            font-size: 0.9rem;
+        }
+
+        .avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #22d3ee, #0ea5e9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #0f172a;
+            flex-shrink: 0;
+        }
+
+        /* ── Stats Row ── */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 36px;
+        }
+
+        .stat-card {
+            background: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 20px;
+            transition: border-color 0.2s;
+        }
+
+        .stat-card:hover {
+            border-color: rgba(34, 211, 238, 0.25);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #22d3ee;
+            margin-top: 6px;
+        }
+
+        .stat-sub {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        /* ── Section Headers ── */
+        .section-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ── Rented Machines Table ── */
+        .table-wrap {
+            background: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            overflow: hidden;
+            margin-bottom: 32px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            padding: 13px 18px;
+            text-align: left;
+            font-size: 0.75rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        td {
+            padding: 15px 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            font-size: 0.9rem;
+            color: #cbd5e1;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-PENDING {
+            background: rgba(234, 179, 8, 0.12);
+            color: #eab308;
+            border: 1px solid rgba(234, 179, 8, 0.25);
+        }
+
+        .badge-APPROVED {
+            background: rgba(34, 197, 94, 0.12);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.25);
+        }
+
+        .badge-REJECTED {
+            background: rgba(239, 68, 68, 0.12);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.25);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 48px 20px;
+            color: #475569;
+        }
+
+        .empty-state .icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            font-size: 0.9rem;
+        }
+
+        .empty-state a {
+            color: #22d3ee;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* ── Cart ── */
+        .cart-section {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .cart-items {
+            background: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            transition: background 0.2s;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .cart-item-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            background: rgba(34, 211, 238, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: 700;
+            color: #f1f5f9;
+            font-size: 0.95rem;
+        }
+
+        .cart-item-type {
+            font-size: 0.78rem;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        .cart-item-price {
+            font-weight: 800;
+            color: #22d3ee;
+            font-size: 1rem;
+            white-space: nowrap;
+        }
+
+        .remove-btn {
+            background: none;
+            border: none;
+            color: #475569;
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 4px 8px;
+            transition: color 0.2s;
+            border-radius: 6px;
+        }
+
+        .remove-btn:hover {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .empty-cart {
+            padding: 40px;
+            text-align: center;
+            color: #475569;
+        }
+
+        /* ── Order Summary ── */
+        .order-summary {
+            background: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            padding: 24px;
+        }
+
+        .order-summary h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-bottom: 20px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            font-size: 0.88rem;
+            color: #94a3b8;
+        }
+
+        .summary-row:last-of-type {
+            border-bottom: none;
+        }
+
+        .summary-row.total {
+            margin-top: 12px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: 800;
+            font-size: 1.05rem;
+            color: #f1f5f9;
+        }
+
+        .summary-row.total span:last-child {
+            color: #22d3ee;
+        }
+
+        .pay-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #22d3ee, #0ea5e9);
+            color: #0f172a;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.2s;
+        }
+
+        .pay-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 24px rgba(34, 211, 238, 0.35);
+        }
+
+        .pay-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .browse-btn {
+            display: block;
+            width: 100%;
+            background: rgba(34, 211, 238, 0.1);
+            color: #22d3ee;
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin-top: 10px;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .browse-btn:hover {
+            background: rgba(34, 211, 238, 0.18);
+        }
+
+        /* ── Payment Modal ── */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(6px);
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal {
+            background: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            width: 90%;
+            max-width: 440px;
+            text-align: center;
+        }
+
+        .modal-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+
+        .modal h3 {
+            color: #f1f5f9;
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .modal p {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .modal-amount {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #22d3ee;
+            margin: 16px 0;
+        }
+
+        .modal-close {
+            background: linear-gradient(135deg, #22d3ee, #0ea5e9);
+            color: #0f172a;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 10px;
+            font-weight: 800;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        /* ── Loader ── */
+        .loader {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 40px;
+            color: #64748b;
+        }
+
+        .spinner {
+            width: 28px;
+            height: 28px;
+            border: 3px solid rgba(34, 211, 238, 0.2);
+            border-top-color: #22d3ee;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-row {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .cart-section {
+                grid-template-columns: 1fr;
+            }
+
+            nav {
+                padding: 0 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="brand">🚜 <span>Wheel</span>Share</div>
+        <div class="nav-links">
+            <a href="/equipments.html">Browse Equipment</a>
+            <a href="/add-equipment.html">+ List Equipment</a>
+            <a href="/user-dashboard.html" class="active">My Dashboard</a>
+            <a href="#" class="logout" id="logoutBtn">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <!-- Welcome Banner -->
+        <div class="welcome-banner">
+            <div>
+                <h1 id="welcomeTitle">Welcome back! 👋</h1>
+                <p id="welcomeSub">Here's an overview of your rented equipment and cart</p>
+            </div>
+            <div class="avatar" id="avatarInitial">U</div>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-label">Total Rented</div>
+                <div class="stat-value" id="statTotal">0</div>
+                <div class="stat-sub">machines</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Pending</div>
+                <div class="stat-value" id="statPending" style="color:#eab308">0</div>
+                <div class="stat-sub">awaiting approval</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Approved</div>
+                <div class="stat-value" id="statApproved" style="color:#22c55e">0</div>
+                <div class="stat-sub">confirmed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">In Cart</div>
+                <div class="stat-value" id="statCart" style="color:#a78bfa">0</div>
+                <div class="stat-sub">items</div>
+            </div>
+        </div>
+
+        <!-- Rented Machines -->
+        <div class="section-title">🚜 My Rented Machines</div>
+        <div class="table-wrap" id="rentedSection">
+            <div class="loader">
+                <div class="spinner"></div> Loading rentals…
+            </div>
+        </div>
+
+        <!-- Cart + Order Summary -->
+        <div class="section-title">🛒 My Cart</div>
+        <div class="cart-section">
+            <div class="cart-items" id="cartItems">
+                <div class="empty-cart">
+                    <div style="font-size:2rem;margin-bottom:8px">🛒</div>
+                    <p style="color:#475569">Your cart is empty.<br><a href="/equipments.html"
+                            style="color:#22d3ee;font-weight:700">Browse equipment →</a></p>
+                </div>
+            </div>
+
+            <div class="order-summary">
+                <h3>📋 Order Summary</h3>
+                <div class="summary-row"><span>Items in cart</span><span id="cartCount">0</span></div>
+                <div class="summary-row"><span>Subtotal</span><span id="summarySubtotal">₹0</span></div>
+                <div class="summary-row"><span>Platform fee (2%)</span><span id="summaryFee">₹0</span></div>
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span id="summaryTotal">₹0</span>
+                </div>
+                <button class="pay-btn" id="payBtn" onclick="proceedPayment()">
+                    💳 Proceed to Payment
+                </button>
+                <a href="/equipments.html" class="browse-btn">+ Add More Equipment</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal-overlay" id="payModal">
+        <div class="modal">
+            <div class="modal-icon">🎉</div>
+            <h3>Payment Confirmed!</h3>
+            <p>Your rental request has been placed successfully. The equipment owner will confirm your booking soon.</p>
+            <div class="modal-amount" id="modalAmount">₹0</div>
+            <p style="font-size:0.8rem;color:#475569;margin-bottom:20px">Order ID: <strong
+                    id="orderId">WS-000000</strong></p>
+            <button class="modal-close" onclick="closePayModal()">Back to Dashboard</button>
+        </div>
+    </div>
+
+    <script>
+        // ── Auth check ─────────────────────────────────────────────────────────
+        const user = JSON.parse(localStorage.getItem('wsUser') || 'null');
+        if (!user) {
+            alert('Please login to view your dashboard');
+            window.location.href = '/login.html';
+        }
+
+        // ── Set welcome info ───────────────────────────────────────────────────
+        const firstName = user.name.split(' ')[0];
+        document.getElementById('welcomeTitle').textContent = `Welcome back, ${firstName}! 👋`;
+        document.getElementById('welcomeSub').textContent = `Logged in as ${user.email}`;
+        document.getElementById('avatarInitial').textContent = firstName[0].toUpperCase();
+
+        document.getElementById('logoutBtn').onclick = () => {
+            localStorage.removeItem('wsUser');
+            localStorage.removeItem('wsCart');
+            window.location.href = '/login.html';
+        };
+
+        // ── Load Rented Machines ───────────────────────────────────────────────
+        async function loadRentals() {
+            const section = document.getElementById('rentedSection');
+            try {
+                const res = await fetch(`/api/rentals/user/${user.id}`);
+                const rentals = await res.json();
+
+                document.getElementById('statTotal').textContent = rentals.length;
+                document.getElementById('statPending').textContent = rentals.filter(r => r.status === 'PENDING').length;
+                document.getElementById('statApproved').textContent = rentals.filter(r => r.status === 'APPROVED').length;
+
+                if (!rentals.length) {
+                    section.innerHTML = `
+            <div class="empty-state">
+              <div class="icon">🚜</div>
+              <p>You haven't rented any equipment yet.<br>
+              <a href="/equipments.html">Browse available equipment →</a></p>
+            </div>`;
+                    return;
+                }
+
+                section.innerHTML = `
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Equipment Name</th>
+                <th>Type</th>
+                <th>Request Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rentals.map((r, i) => `
+                <tr>
+                  <td>${i + 1}</td>
+                  <td><strong style="color:#f1f5f9">${r.equipmentName}</strong></td>
+                  <td><span style="color:#94a3b8;font-size:0.82rem">${r.equipmentId ? '–' : ''}</span></td>
+                  <td>${new Date(r.requestDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+                  <td><span class="badge badge-${r.status}">${r.status}</span></td>
+                </tr>`).join('')}
+            </tbody>
+          </table>`;
+            } catch (e) {
+                section.innerHTML = `<div class="empty-state"><div class="icon">⚠️</div><p>Could not load rentals. Is the server running?</p></div>`;
+            }
+        }
+
+        // ── Cart (localStorage) ────────────────────────────────────────────────
+        function getCart() {
+            return JSON.parse(localStorage.getItem('wsCart') || '[]');
+        }
+        function saveCart(cart) {
+            localStorage.setItem('wsCart', JSON.stringify(cart));
+        }
+
+        const EQUIPMENT_ICONS = {
+            'Tractor': '🚜', 'Harvester': '🌾', 'Excavator': '🏗️',
+            'Road Roller': '🛞', 'Plow': '⚙️', 'Harrow': '🔧', 'Other': '🚧'
+        };
+
+        function renderCart() {
+            const cart = getCart();
+            const cartDiv = document.getElementById('cartItems');
+            const payBtn = document.getElementById('payBtn');
+
+            document.getElementById('statCart').textContent = cart.length;
+
+            if (!cart.length) {
+                cartDiv.innerHTML = `<div class="empty-cart">
+          <div style="font-size:2rem;margin-bottom:8px">🛒</div>
+          <p style="color:#475569">Your cart is empty.<br>
+          <a href="/equipments.html" style="color:#22d3ee;font-weight:700">Browse equipment →</a></p>
+        </div>`;
+                updateSummary(0, 0);
+                payBtn.disabled = true;
+                return;
+            }
+
+            cartDiv.innerHTML = cart.map((item, idx) => `
+        <div class="cart-item">
+          <div class="cart-item-icon">${EQUIPMENT_ICONS[item.type] || '🚧'}</div>
+          <div class="cart-item-info">
+            <div class="cart-item-name">${item.name}</div>
+            <div class="cart-item-type">${item.type}</div>
+          </div>
+          <div class="cart-item-price">₹${Number(item.pricePerDay).toLocaleString('en-IN')}/day</div>
+          <button class="remove-btn" onclick="removeFromCart(${idx})" title="Remove">✕</button>
+        </div>`).join('');
+
+            const subtotal = cart.reduce((sum, item) => sum + Number(item.pricePerDay), 0);
+            updateSummary(cart.length, subtotal);
+            payBtn.disabled = false;
+        }
+
+        function updateSummary(count, subtotal) {
+            const fee = Math.round(subtotal * 0.02);
+            const total = subtotal + fee;
+            document.getElementById('cartCount').textContent = count;
+            document.getElementById('summarySubtotal').textContent = `₹${subtotal.toLocaleString('en-IN')}`;
+            document.getElementById('summaryFee').textContent = `₹${fee.toLocaleString('en-IN')}`;
+            document.getElementById('summaryTotal').textContent = `₹${total.toLocaleString('en-IN')}`;
+        }
+
+        function removeFromCart(idx) {
+            const cart = getCart();
+            cart.splice(idx, 1);
+            saveCart(cart);
+            renderCart();
+        }
+
+        function proceedPayment() {
+            const cart = getCart();
+            if (!cart.length) return;
+            const subtotal = cart.reduce((sum, item) => sum + Number(item.pricePerDay), 0);
+            const fee = Math.round(subtotal * 0.02);
+            const total = subtotal + fee;
+            document.getElementById('modalAmount').textContent = `₹${total.toLocaleString('en-IN')}`;
+            document.getElementById('orderId').textContent = 'WS-' + Date.now().toString().slice(-6);
+            document.getElementById('payModal').classList.add('open');
+        }
+
+        function closePayModal() {
+            document.getElementById('payModal').classList.remove('open');
+            // Clear cart after payment
+            saveCart([]);
+            renderCart();
+        }
+
+        // ── Init ──────────────────────────────────────────────────────────────
+        loadRentals();
+        renderCart();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+</head>
+
+<body>
+
+    <h2>Register Here</h2>
+    <form id="registerForm">
+        <input type="text" name="uname" id="uname" placeholder="Enter Name" required><br>
+        <input type="email" name="email" id="uemail" placeholder="Enter Email" required><br>
+        <input type="password" name="password" id="upassword" placeholder="Enter Password" required><br>
+        <input type="text" name="phone" id="unumber" placeholder="Enter Phone Number" required><br>
+        <button type="submit">Register</button>
+    </form>
+
+    <script>
+        document.getElementById("registerForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            let userData = {
+                uname: document.getElementById("uname").value,
+                uemail: document.getElementById("uemail").value,
+                upassword: document.getElementById("upassword").value,
+                unumber: document.getElementById("unumber").value
+            };
+
+            // We will submit as form encoded to match UserController's @ModelAttribute
+            const searchParams = new URLSearchParams();
+            for (const key in userData) {
+                searchParams.append(key, userData[key]);
+            }
+
+            let response = await fetch("http://localhost:8080/addingUser", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: searchParams
+            });
+
+            if (response.ok) {
+                alert("User registered successfully! Redirecting to home...");
+                window.location.href = "/home";  // ✅ Redirect to home page
+            } else {
+                let errorMessage = await response.text();
+                alert("Registration failed: " + errorMessage);
+            }
+        });
+    </script>
+
+</body>
+
+</html>
