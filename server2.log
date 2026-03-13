@@ -1,0 +1,88 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------------------< com.business:BusinessProject >--------------------
+[INFO] Building BusinessProject 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:3.1.3:run (default-cli) > test-compile @ BusinessProject >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ BusinessProject ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 50 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ BusinessProject ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ BusinessProject ---
+[INFO] skip non existing resourceDirectory C:\GITHUB SB projects\Business_Management_Project\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ BusinessProject ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] <<< spring-boot:3.1.3:run (default-cli) < test-compile @ BusinessProject <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:3.1.3:run (default-cli) @ BusinessProject ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.1.3)
+
+2026-02-28T19:29:21.137+05:30  INFO 28012 --- [  restartedMain] c.business.BusinessProjectApplication    : Starting BusinessProjectApplication using Java 21.0.2 with PID 28012 (C:\GITHUB SB projects\Business_Management_Project\target\classes started by Chaitanya in C:\GITHUB SB projects\Business_Management_Project)
+2026-02-28T19:29:21.140+05:30  INFO 28012 --- [  restartedMain] c.business.BusinessProjectApplication    : No active profile set, falling back to 1 default profile: "default"
+2026-02-28T19:29:21.235+05:30  INFO 28012 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-02-28T19:29:21.235+05:30  INFO 28012 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-02-28T19:29:22.471+05:30  INFO 28012 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-28T19:29:22.585+05:30  INFO 28012 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 98 ms. Found 4 JPA repository interfaces.
+2026-02-28T19:29:23.786+05:30  INFO 28012 --- [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8081 (http)
+2026-02-28T19:29:23.812+05:30  INFO 28012 --- [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-02-28T19:29:23.814+05:30  INFO 28012 --- [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.12]
+2026-02-28T19:29:23.941+05:30  INFO 28012 --- [  restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-02-28T19:29:23.942+05:30  INFO 28012 --- [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2701 ms
+2026-02-28T19:29:24.191+05:30  INFO 28012 --- [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-02-28T19:29:24.287+05:30  INFO 28012 --- [  restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.2.7.Final
+2026-02-28T19:29:24.290+05:30  INFO 28012 --- [  restartedMain] org.hibernate.cfg.Environment            : HHH000406: Using bytecode reflection optimizer
+2026-02-28T19:29:24.516+05:30  INFO 28012 --- [  restartedMain] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2026-02-28T19:29:24.742+05:30  INFO 28012 --- [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-02-28T19:29:24.759+05:30  INFO 28012 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : businessproject - Starting...
+2026-02-28T19:29:25.401+05:30  INFO 28012 --- [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : businessproject - Added connection com.mysql.cj.jdbc.ConnectionImpl@7611e2cd
+2026-02-28T19:29:25.405+05:30  INFO 28012 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : businessproject - Start completed.
+2026-02-28T19:29:26.081+05:30  INFO 28012 --- [  restartedMain] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2026-02-28T19:29:27.383+05:30  INFO 28012 --- [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2026-02-28T19:29:27.625+05:30  INFO 28012 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-02-28T19:29:28.483+05:30  WARN 28012 --- [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-02-28T19:29:29.034+05:30  WARN 28012 --- [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : Unable to start LiveReload server
+2026-02-28T19:29:29.061+05:30  WARN 28012 --- [  restartedMain] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'
+2026-02-28T19:29:29.061+05:30  INFO 28012 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-02-28T19:29:29.061+05:30  INFO 28012 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : businessproject - Shutdown initiated...
+2026-02-28T19:29:29.083+05:30  INFO 28012 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : businessproject - Shutdown completed.
+2026-02-28T19:29:29.090+05:30  INFO 28012 --- [  restartedMain] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-02-28T19:29:29.109+05:30  INFO 28012 --- [  restartedMain] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-02-28T19:29:29.148+05:30 ERROR 28012 --- [  restartedMain] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8081 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8081 or configure this application to listen on another port.
+
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  16.809 s
+[INFO] Finished at: 2026-02-28T19:29:29+05:30
+[INFO] ------------------------------------------------------------------------

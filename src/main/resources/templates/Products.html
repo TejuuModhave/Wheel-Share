@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<title>Equipment</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+	<link rel="stylesheet" href="" th:href="@{/css/Navigation.css}" />
+	<link rel="stylesheet" href="" th:href="@{css/Products.css}" />
+
+</head>
+
+<body>
+	<nav th:replace="~{Navigation::navbar()}"></nav>
+	<section class="row1" th:each="s: ${products}">
+		<div class="p1">
+			<h4>Equipment: <span th:text="${s.pname}"></span></h4>
+			<h4>Price/Day: <span th:text="'₹ '+${s.pprice}"></span></h4>
+
+			<a href="/login" id="buy">Rent Now</a><br />
+		</div>
+
+	</section>
+	<script>
+		document.getElementById("buy").addEventListener("click", function () {
+			alert("Please Login to Rent Equipment")
+		});
+	</script>
+</body>
+
+</html>

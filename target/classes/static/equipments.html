@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wheel Share – Equipment for Rent</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+
+        /* ── Navbar ── */
+        nav {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0 40px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #f8fafc;
+        }
+
+        .brand span {
+            color: #22d3ee;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #22d3ee;
+            background: rgba(34, 211, 238, 0.08);
+        }
+
+        .nav-links a.btn-nav {
+            background: #22d3ee;
+            color: #0f172a;
+            font-weight: 700;
+        }
+
+        .nav-links a.btn-nav:hover {
+            background: #0ea5e9;
+        }
+
+        .cart-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .cart-count {
+            background: #ef4444;
+            color: #fff;
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 1px 6px;
+            border-radius: 999px;
+            min-width: 18px;
+            text-align: center;
+            display: none;
+        }
+
+        .cart-btn {
+            background: rgba(167, 139, 250, 0.15);
+            color: #a78bfa;
+            border: 1px solid rgba(167, 139, 250, 0.35);
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-right: 6px;
+        }
+
+        .cart-btn:hover {
+            background: rgba(167, 139, 250, 0.28);
+        }
+
+        /* ── Hero ── */
+        .hero {
+            text-align: center;
+            padding: 80px 40px 60px;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(34, 211, 238, 0.15), transparent);
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            color: #f8fafc;
+            position: relative;
+            line-height: 1.15;
+        }
+
+        .hero h1 span {
+            color: #22d3ee;
+        }
+
+        .hero p {
+            margin-top: 16px;
+            font-size: 1.1rem;
+            color: #94a3b8;
+            position: relative;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(34, 211, 238, 0.1);
+            color: #22d3ee;
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            border-radius: 999px;
+            padding: 6px 18px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        /* ── Filters ── */
+        .filters {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 32px 40px 0;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #94a3b8;
+            padding: 8px 20px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: rgba(34, 211, 238, 0.15);
+            border-color: #22d3ee;
+            color: #22d3ee;
+        }
+
+        /* ── Grid ── */
+        .section {
+            padding: 40px 40px 80px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            color: #64748b;
+            margin-bottom: 28px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        /* ── Card ── */
+        .card {
+            background: #1e293b;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border-color: rgba(34, 211, 238, 0.3);
+        }
+
+        .card-img-wrapper {
+            position: relative;
+            height: 210px;
+            overflow: hidden;
+        }
+
+        .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .card:hover img {
+            transform: scale(1.06);
+        }
+
+        .type-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(34, 211, 238, 0.4);
+            color: #22d3ee;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 999px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-bottom: 6px;
+        }
+
+        .card-meta {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #64748b;
+            font-size: 0.82rem;
+            margin-bottom: 18px;
+        }
+
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .price {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .price-label {
+            font-size: 0.72rem;
+            color: #64748b;
+        }
+
+        .price-value {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #22d3ee;
+        }
+
+        .price-value span {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #64748b;
+        }
+
+        .rent-btn {
+            background: linear-gradient(135deg, #22d3ee, #0ea5e9);
+            color: #0f172a;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.88rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .rent-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 16px rgba(34, 211, 238, 0.4);
+        }
+
+        /* ── Stats ── */
+        .stats {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            padding: 32px 40px;
+            background: rgba(255, 255, 255, 0.02);
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #22d3ee;
+        }
+
+        .stat-label {
+            font-size: 0.78rem;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        /* ── Loading / Empty ── */
+        .loader {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            padding: 80px;
+            color: #64748b;
+        }
+
+        .spinner {
+            width: 36px;
+            height: 36px;
+            border: 4px solid rgba(34, 211, 238, 0.2);
+            border-top-color: #22d3ee;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .empty {
+            text-align: center;
+            padding: 80px;
+            color: #64748b;
+        }
+
+        /* ── Modal ── */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal {
+            background: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 32px;
+            width: 90%;
+            max-width: 440px;
+        }
+
+        .modal h3 {
+            color: #f1f5f9;
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+        }
+
+        .modal p {
+            color: #64748b;
+            font-size: 0.88rem;
+            margin-bottom: 20px;
+        }
+
+        .modal .eq-info {
+            background: #0f172a;
+            border-radius: 8px;
+            padding: 14px;
+            margin-bottom: 20px;
+        }
+
+        .modal .eq-info div {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-bottom: 4px;
+        }
+
+        .modal .eq-info strong {
+            color: #22d3ee;
+        }
+
+        .modal-btns {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-confirm {
+            flex: 1;
+            background: linear-gradient(135deg, #22d3ee, #0ea5e9);
+            color: #0f172a;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            color: #94a3b8;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .modal-msg {
+            margin-top: 14px;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.88rem;
+            display: none;
+        }
+
+        .modal-msg.success {
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            display: block;
+        }
+
+        .modal-msg.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            display: block;
+        }
+
+        /* ── Toast ── */
+        .toast {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            background: #22d3ee;
+            color: #0f172a;
+            padding: 14px 22px;
+            border-radius: 12px;
+            font-weight: 700;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            transform: translateY(80px);
+            opacity: 0;
+            transition: all 0.35s;
+            z-index: 999;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        @media (max-width: 640px) {
+            nav {
+                padding: 0 16px;
+            }
+
+            .hero {
+                padding: 60px 20px 40px;
+            }
+
+            .section {
+                padding: 24px 16px 60px;
+            }
+
+            .filters {
+                padding: 20px 16px 0;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                gap: 16px;
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav>
+        <div class="brand">🚜 <span>Wheel</span>Share</div>
+        <div class="nav-links" id="navLinks">
+            <a href="/equipments.html">Equipment</a>
+            <a href="/add-equipment.html">+ List Equipment</a>
+            <a href="/user-dashboard.html">
+                <span class="cart-badge">🛒 My Dashboard <span class="cart-count" id="cartBadge">0</span></span>
+            </a>
+            <a href="/dashboard.html">Owner View</a>
+            <a href="/login.html" id="loginNavBtn" class="btn-nav">Login</a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <div class="hero">
+        <div class="hero-badge">🌾 India's #1 Machinery Rental Platform</div>
+        <h1>Rent <span>Heavy Machinery</span><br>For Any Job</h1>
+        <p>Tractors, Harvesters, JCBs, Road Rollers &amp; more — available near you</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats">
+        <div class="stat">
+            <div class="stat-value" id="totalCount">–</div>
+            <div class="stat-label">Equipment Listed</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">4.9★</div>
+            <div class="stat-label">Avg Rating</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">₹600+</div>
+            <div class="stat-label">Starting From</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">24/7</div>
+            <div class="stat-label">Support</div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters" id="filterBar">
+        <button class="filter-btn active" onclick="filterEquipment(this, 'all')">All</button>
+    </div>
+
+    <!-- Grid -->
+    <div class="section">
+        <div class="section-title" id="sectionTitle">Loading equipment…</div>
+        <div class="grid" id="grid">
+            <div class="loader">
+                <div class="spinner"></div> Fetching from database…
+            </div>
+        </div>
+    </div>
+
+    <!-- Rent Modal -->
+    <div class="modal-overlay" id="rentModal">
+        <div class="modal">
+            <h3>🚜 Confirm Rental Request</h3>
+            <p>You are requesting to rent:</p>
+            <div class="eq-info">
+                <div>Equipment: <strong id="modalEqName">–</strong></div>
+                <div>Price: <strong id="modalEqPrice">–</strong></div>
+            </div>
+            <div class="modal-btns">
+                <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+                <button class="btn-confirm" onclick="confirmRent()">Confirm Request</button>
+            </div>
+            <div class="modal-msg" id="modalMsg"></div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">✅ Rent request submitted!</div>
+
+    <script>
+        let allEquipment = [];
+        let selectedEq = null;
+
+        // ── Auth ────────────────────────────────────────────────────────────────
+        const user = JSON.parse(localStorage.getItem('wsUser') || 'null');
+        const loginBtn = document.getElementById('loginNavBtn');
+        if (user) {
+            loginBtn.textContent = `👤 ${user.name}`;
+            loginBtn.href = '/dashboard.html';
+            loginBtn.className = 'btn-nav';
+        }
+
+        // ── Load Equipment ───────────────────────────────────────────────────────
+        async function loadEquipment() {
+            try {
+                const res = await fetch('/api/equipments');
+                if (!res.ok) throw new Error('API error');
+                allEquipment = await res.json();
+                renderCards(allEquipment);
+                buildFilters(allEquipment);
+                document.getElementById('totalCount').textContent = allEquipment.length;
+                document.getElementById('sectionTitle').textContent = `Showing ${allEquipment.length} equipment available for rent`;
+            } catch (e) {
+                document.getElementById('grid').innerHTML = `<div class="empty">⚠️ Could not load equipment.<br><small>${e.message}</small></div>`;
+            }
+        }
+
+        function renderCards(items) {
+            const grid = document.getElementById('grid');
+            if (!items.length) { grid.innerHTML = '<div class="empty">No equipment found.</div>'; return; }
+            grid.innerHTML = items.map(eq => `
+        <div class="card">
+          <div class="card-img-wrapper">
+            <img src="${eq.imageUrl}" alt="${eq.name}" loading="lazy"
+              onerror="this.src='/Images/tractor.jpeg'">
+            <span class="type-badge">${eq.type}</span>
+          </div>
+          <div class="card-body">
+            <div class="card-title">${eq.name}</div>
+            <div class="card-meta">📍 Available Nearby &nbsp;|&nbsp; ✅ Verified</div>
+            <div class="card-footer">
+              <div class="price">
+                <span class="price-label">Rent Per Day</span>
+                <span class="price-value">₹${eq.pricePerDay.toLocaleString('en-IN')} <span>/ day</span></span>
+              </div>
+              <div style="display:flex;gap:6px">
+                <button class="cart-btn" onclick="addToCart(${eq.id}, '${eq.name}', '${eq.type}', ${eq.pricePerDay})">🛒 Cart</button>
+                <button class="rent-btn" onclick="openRentModal(${eq.id}, '${eq.name}', ${eq.pricePerDay})">Rent Now</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+        }
+
+        function buildFilters(items) {
+            const types = [...new Set(items.map(e => e.type))];
+            const bar = document.getElementById('filterBar');
+            types.forEach(type => {
+                const btn = document.createElement('button');
+                btn.className = 'filter-btn';
+                btn.textContent = type;
+                btn.onclick = () => filterEquipment(btn, type);
+                bar.appendChild(btn);
+            });
+        }
+
+        function filterEquipment(btn, type) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const filtered = type === 'all' ? allEquipment : allEquipment.filter(e => e.type === type);
+            renderCards(filtered);
+            document.getElementById('sectionTitle').textContent = `Showing ${filtered.length} equipment${type !== 'all' ? ' (' + type + ')' : ''}`;
+        }
+
+        // ── Rent Modal ───────────────────────────────────────────────────────────
+        function openRentModal(id, name, price) {
+            if (!user) {
+                if (confirm('Please login to rent equipment. Go to login page?')) {
+                    window.location.href = '/login.html';
+                }
+                return;
+            }
+            selectedEq = { id, name, price };
+            document.getElementById('modalEqName').textContent = name;
+            document.getElementById('modalEqPrice').textContent = `₹${price.toLocaleString('en-IN')} / day`;
+            document.getElementById('modalMsg').className = 'modal-msg';
+            document.getElementById('rentModal').classList.add('open');
+        }
+
+        function closeModal() {
+            document.getElementById('rentModal').classList.remove('open');
+            selectedEq = null;
+        }
+
+        async function confirmRent() {
+            if (!selectedEq || !user) return;
+            const modalMsg = document.getElementById('modalMsg');
+            const res = await fetch('/api/rentals', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: user.id, equipmentId: selectedEq.id })
+            });
+            if (res.ok) {
+                modalMsg.className = 'modal-msg success';
+                modalMsg.textContent = '✅ Request submitted! Owner will approve soon.';
+                setTimeout(() => closeModal(), 2000);
+                showToast(`Rental request for "${selectedEq.name}" submitted!`);
+            } else {
+                modalMsg.className = 'modal-msg error';
+                modalMsg.textContent = '❌ Failed to submit. Please try again.';
+            }
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = '✅ ' + msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3500);
+        }
+
+        // Close modal on overlay click
+        document.getElementById('rentModal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeModal();
+        });
+
+        // ── Cart ────────────────────────────────────────────────────────────────
+        function addToCart(id, name, type, pricePerDay) {
+            if (!user) {
+                if (confirm('Please login to add items to cart. Go to login?')) window.location.href = '/login.html';
+                return;
+            }
+            const cart = JSON.parse(localStorage.getItem('wsCart') || '[]');
+            const already = cart.find(i => i.id === id);
+            if (already) { showToast(`"${name}" is already in your cart!`); return; }
+            cart.push({ id, name, type, pricePerDay });
+            localStorage.setItem('wsCart', JSON.stringify(cart));
+            updateCartBadge();
+            showToast(`"${name}" added to cart! View in My Dashboard.`);
+        }
+
+        function updateCartBadge() {
+            const cart = JSON.parse(localStorage.getItem('wsCart') || '[]');
+            const badge = document.getElementById('cartBadge');
+            if (cart.length > 0) {
+                badge.textContent = cart.length;
+                badge.style.display = 'inline-block';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        loadEquipment();
+        updateCartBadge();
+    </script>
+</body>
+
+</html>

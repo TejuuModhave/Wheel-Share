@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wheel Share Platform</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: #1a73e8;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        button {
+            background: #1a73e8;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #1557b0;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f8f9fa;
+        }
+
+        .badge-pending {
+            background: #f5c518;
+            color: black;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+        }
+
+        .badge-approved {
+            background: #28a745;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🚜 Wheel Share Platform</h1>
+        <p>Rent heavy machinery and farming equipment easily.</p>
+
+        <div class="grid">
+            <!-- User Registration -->
+            <div class="card">
+                <h2>1. Register User</h2>
+                <form id="userForm">
+                    <input type="text" id="uname" placeholder="Full Name" required>
+                    <input type="email" id="uemail" placeholder="Email" required>
+                    <input type="text" id="upassword" placeholder="Password" required>
+                    <input type="number" id="unumber" placeholder="Phone Number" required>
+                    <button type="submit">Create User</button>
+                </form>
+                <p id="userStatus"></p>
+            </div>
+
+            <!-- Add Equipment -->
+            <div class="card">
+                <h2>2. List Equipment (Owner)</h2>
+                <form id="equipmentForm">
+                    <select id="ownerSelect" required>
+                        <option value="">-- Select Owner --</option>
+                    </select>
+                    <input type="text" id="pname" placeholder="Equipment Name (e.g., Tractor)" required>
+                    <input type="number" id="pprice" placeholder="Price per Day ($)" required>
+                    <input type="text" id="pdescription" placeholder="Description" required>
+                    <button type="submit">Add Equipment</button>
+                </form>
+                <p id="eqStatus"></p>
+            </div>
+        </div>
+
+        <!-- Available Equipment -->
+        <div class="card">
+            <h2>3. Available Equipment to Rent</h2>
+            <div style="margin-bottom: 15px;">
+                <label>Renting As User:</label>
+                <select id="renterSelect">
+                    <option value="">-- Select User --</option>
+                </select>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Owner</th>
+                        <th>Price/Day</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="equipmentTable">
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Rental Requests -->
+        <div class="card">
+            <h2>4. All Rental Requests</h2>
+            <button onclick="loadRentals()" style="background: #28a745; margin-bottom: 10px;">Refresh Rentals</button>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Equipment</th>
+                        <th>Renter</th>
+                        <th>Days</th>
+                        <th>Total Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="rentalTable">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:62454/api';
+
+        // Load users on startup
+        async function loadUsers() {
+            const res = await fetch(`${API_BASE}/users`);
+            const users = await res.json();
+            const ownerSelect = document.getElementById('ownerSelect');
+            const renterSelect = document.getElementById('renterSelect');
+
+            ownerSelect.innerHTML = '<option value="">-- Select Owner --</option>';
+            renterSelect.innerHTML = '<option value="">-- Select User --</option>';
+
+            users.forEach(u => {
+                const opt = `<option value="${u.u_id}">${u.uname} (${u.uemail})</option>`;
+                ownerSelect.innerHTML += opt;
+                renterSelect.innerHTML += opt;
+            });
+        }
+
+        // Load equipment
+        async function loadEquipment() {
+            const res = await fetch(`${API_BASE}/equipment`);
+            const eq = await res.json();
+            const tbody = document.getElementById('equipmentTable');
+            tbody.innerHTML = '';
+
+            eq.forEach(e => {
+                const ownerName = e.owner ? e.owner.uname : 'Unknown';
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${e.pid}</td>
+                        <td>${e.pname}</td>
+                        <td>${ownerName}</td>
+                        <td>$${e.pprice}</td>
+                        <td><button onclick="requestRental('${e.pname}', ${e.pprice})">Rent (3 days)</button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Load Rentals
+        async function loadRentals() {
+            const res = await fetch(`${API_BASE}/rentals`);
+            const rentals = await res.json();
+            const tbody = document.getElementById('rentalTable');
+            tbody.innerHTML = '';
+
+            rentals.forEach(r => {
+                const userName = r.user ? r.user.uname : 'Unknown';
+                const statusBadge = `<span class="badge-${r.status.toLowerCase()}">${r.status}</span>`;
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${r.oId}</td>
+                        <td>${r.oName}</td>
+                        <td>${userName}</td>
+                        <td>${r.oQuantity}</td>
+                        <td>$${r.totalAmmout}</td>
+                        <td>${statusBadge}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Event Listeners
+        document.getElementById('userForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                uname: document.getElementById('uname').value,
+                uemail: document.getElementById('uemail').value,
+                upassword: document.getElementById('upassword').value,
+                unumber: document.getElementById('unumber').value
+            };
+            const res = await fetch(`${API_BASE}/users`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            if (res.ok) {
+                document.getElementById('userStatus').innerText = "User created successfully!";
+                loadUsers();
+                e.target.reset();
+            }
+        });
+
+        document.getElementById('equipmentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                owner_id: document.getElementById('ownerSelect').value,
+                pname: document.getElementById('pname').value,
+                pprice: document.getElementById('pprice').value,
+                pdescription: document.getElementById('pdescription').value
+            };
+            const res = await fetch(`${API_BASE}/equipment`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            if (res.ok) {
+                document.getElementById('eqStatus').innerText = "Equipment listed successfully!";
+                loadEquipment();
+                e.target.reset();
+            }
+        });
+
+        async function requestRental(pname, pprice) {
+            const userId = document.getElementById('renterSelect').value;
+            if (!userId) {
+                alert("Please select a User from the 'Renting As User' dropdown first!");
+                return;
+            }
+
+            const data = {
+                user_id: userId,
+                equipmentName: pname,
+                price: pprice,
+                days: 3 // Hardcoded for demo
+            };
+
+            const res = await fetch(`${API_BASE}/rentals`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            if (res.ok) {
+                alert("Rental requested successfully!");
+                loadRentals();
+            }
+        }
+
+        // Initialize
+        loadUsers();
+        loadEquipment();
+        loadRentals();
+    </script>
+</body>
+
+</html>
