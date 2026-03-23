@@ -249,17 +249,7 @@ Invoke-RestMethod -Uri http://localhost:8080/api/rentals -Method POST `
 
 ---
 
-## 🖼️ Screenshots
 
-> _Screenshots will be added here once UI is finalized._
-
-| Page | Preview |
-|---|---|
-| Equipment Listing | `[screenshot]` |
-| User Dashboard | `[screenshot]` |
-| Owner Dashboard | `[screenshot]` |
-
----
 
 ## 🚀 Future Improvements
 
@@ -283,9 +273,6 @@ Invoke-RestMethod -Uri http://localhost:8080/api/rentals -Method POST `
 
 ---
 
-## 📄 License
-
-This project is open-source and available under the [MIT License](LICENSE).
 
 ---
 
