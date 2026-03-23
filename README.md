@@ -274,7 +274,4 @@ Invoke-RestMethod -Uri http://localhost:8080/api/rentals -Method POST `
 ---
 
 
----
 
-<p align="center">Built with ☕ Java + 🌱 Spring Boot</p>
-# URBAN-BITE
