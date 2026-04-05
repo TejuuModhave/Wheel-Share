@@ -1,8 +1,4 @@
--- ==========================================
--- Wheel Share Database Schema
--- Run this in your MySQL instance.
--- Creates database, tables, and inserts sample data.
--- ==========================================
+
 
 CREATE DATABASE IF NOT EXISTS businessproject;
 USE businessproject;
